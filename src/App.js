@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import Form from './components/Form';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+
+
+  const [lyrics, setLyrics] = useState({});
+  const [saveLyrics, setSaveLyrics] = useState('');
+
+
+  useEffect(() => {
+    if(Object.keys(lyrics).length === 0) return;
+
+    const lyricsApiFetch = async () => {
+
+      const { artist, song } = lyrics
+
+      const url =`https://api.lyrics.ovh/v1/${artist}/${song}`;
+      const resp = await axios(url);
+      setSaveLyrics(resp.data.lyrics);
+    }
+    lyricsApiFetch();
+  },[lyrics])
+
+  return ( 
+    <> 
+      <Form 
+        setLyrics={setLyrics}
+      />
+    </>
+   );
 }
-
+ 
 export default App;
